@@ -140,18 +140,22 @@ const login = async ( req,res) => {
  const updatePassword = async (req,res) => {
     try {
         const userId = res.user.id;
-        const {password} = req.body;
+        const {currentPassword,password} = req.body;
         if(!userId){
             return res.status(400).json({
                 message:"User not found",
             })
         }
-        if(!password){
+        if(!password || !currentPassword){
             return res.status(400).json({message:"Password is required"})
         }
         const existedUser = await User.findById(userId);
         if(!existedUser){
             return res.status(400).json({message:"User not found"})
+        }
+        const isPasswordMatched = await existedUser.comparePassword(currentPassword);
+        if(!isPasswordMatched){
+            return res.status(400).json({message:"Invalid password"})
         }
         const updatedUser = await User.findByIdAndUpdate(userId,{password},{new:true}).select("-password");
         if(!updatedUser){
@@ -293,5 +297,5 @@ const addAddress = async (req,res)=>{
         return res.status(500).json({message:error.message})
     }
  }
- 
+
 export  {registerUser,login,logout,getUserProfile,updateUserProfile,updatePassword,updateProfilePicture,addAddress,changeAddress,deleteAddress,deleteProfilePicture,deleteUserProfile};
