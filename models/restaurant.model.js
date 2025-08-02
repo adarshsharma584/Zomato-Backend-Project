@@ -1,26 +1,6 @@
 import mongoose,{Schema} from "mongoose";
 import { addressSchema } from "./user.model.js";
 
-const menuSchema = new Schema({
-    name:{
-        type:String,
-        required:true,
-        trim:true,
-    },
-    description:{
-        type:String,
-        required:true,
-        trim:true,
-    },
-    price:{
-        type:Number,
-        required:true,
-    },
-    image:{
-        type:String,
-        default:null
-    }
-});
 
 
 const restaurantSchema = new Schema({
@@ -29,7 +9,10 @@ const restaurantSchema = new Schema({
         required:true,
         trim:true,
     },
-   menu:[menuSchema],
+   foodItems:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"FoodItem"
+   }],
     owner:{
         type:Schema.Types.ObjectId,
         ref:"User"
