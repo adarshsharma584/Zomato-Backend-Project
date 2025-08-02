@@ -4,7 +4,7 @@ dotenv.config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./utils/dbConnect.js";
-
+import userRouter from "./routes/user.route.js";
 connectDB();
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -13,6 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
+
+app.use("/api/v1/users",userRouter);
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
